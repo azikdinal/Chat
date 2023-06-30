@@ -1,75 +1,31 @@
-const {Message, Chat} = require('../db/models');
+const {Message, Chat, ChatMessage} = require('../db/models');
 
 class MessageController {
-    async get_one(req, res) {
+    async send(req, res) {
         try {
-            const {id} = req.params
-            const message = await Message.findOne(
-                {where: {id}}
-            );
-            return res.json(message);
+            const {text, chatId} = req.body;
+            const message = await Message.create({text});
+            const messageId = message.id
+            const chatMessage = await ChatMessage.create({chatId, messageId});
+            return res.json(chatMessage);
         } catch (e) {
             console.log(e)
-        }
-
-    }
-
-    async get_all(req, res) {
-        try {
-            const messages = await Message.findAll();
-            return res.json(messages);
-        } catch (e) {
-            console.log(e)
+            return res.status(400).json("Bad request")
         }
     }
+
 
     async get_chat_messages(req, res) {
         try {
             const {chatId} = req.params
-            const messages = await Message.findAll({where: {chatId}})
+            const messages = await ChatMessage.findAll({where: {chatId}})
             return res.json(messages)
         } catch (e) {
             console.log(e)
-            return res.status(500).json({error: 'Iternal Server Error'})
+            return res.status(400).json("Bad request")
         }
     }
 
-    async delete_all(req, res) {
-        try {
-            const messages = await Message.destroy({where: {}});
-            return res.json(messages);
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
-
-    async delete_one(req, res) {
-        try {
-            const {id} = req.params
-            const deletedMessage = await Message.destroy(
-                {where: {id}}
-            );
-            return res.json({
-                "message": deletedMessage,
-                "status": "deleted"
-            });
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
-
-    async create(req, res) {
-        try {
-            const {text, isUser, chatId, userId} = req.body;
-            const createdMessage = await Message.create({text, isUser, chatId, userId});
-            return res.json(createdMessage);
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
 }
 
 module.exports = new MessageController();

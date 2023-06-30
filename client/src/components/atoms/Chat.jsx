@@ -1,11 +1,13 @@
 import {useDispatch} from "react-redux";
-import {get_messages_by_chatId} from "../../store/actions/messageActions.js";
+import {get_messages_by_chatId, set_chat_id} from "../../store/actions/messageActions.js";
+import {socket} from "../../sockets/socket.js";
 
 const Chat = ({chatId}) => {
     const dispatch = useDispatch()
 
     const handleClick = () => {
-        // dispatch(set_chat_id(chatId))
+        dispatch(set_chat_id(chatId))
+        socket.emit("broadcast chatId", {chatId})
         dispatch(get_messages_by_chatId(chatId))
     }
 

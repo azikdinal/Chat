@@ -10,7 +10,7 @@ const Chats = () => {
 
     return (
         <div className="chats">
-            {chats.map((chat, index) => <Chat chatId={chat.id} key={chat.id}/>)}
+            {chats.map(chat => <Chat chatId={chat.id} key={chat.id}/>)}
         </div>
     );
 };

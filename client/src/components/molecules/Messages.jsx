@@ -3,10 +3,11 @@ import {useSelector} from "react-redux";
 import {useMessageDelivered} from "../../hooks/useMessageDelivered.js";
 import Message from "../atoms/Message.jsx";
 
-const Messages = ({chatId}) => {
+const Messages = () => {
     const containerRef = useRef(null);
     const messages = useSelector(state => state.message.messages)
-    useMessageDelivered(chatId)
+
+    useMessageDelivered()
 
 
     // useEffect(() => {

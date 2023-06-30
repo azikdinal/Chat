@@ -1,10 +1,24 @@
-import {io} from "socket.io-client";
+// Клиент
 
-const socket = io(process.env.APP_URL)
+import {io} from 'socket.io-client';
 
-socket.on("connection", () => console.log("Connected! Id: ", socket.id))
-socket.on("error", () => console.log("Couldn't connect to server!"))
+export const socket = io(process.env.APP_URL);
 
-socket.on("close", () => console.log("Disconnected"))
+const sendUserIdHandler = (data) => {
+    console.log(data);
+};
 
-export default socket
+export const openSocketConnection = (userId) => {
+    socket.on('connection', () => {
+        console.log('Connected! Id: ', socket.id);
+    });
+
+
+    socket.emit('broadcast userId', {userId});
+
+    socket.on('Send userId', sendUserIdHandler);
+
+    socket.on('error', () => console.log("Couldn't connect to server!"));
+
+    socket.on('close', () => console.log('Disconnected'));
+};

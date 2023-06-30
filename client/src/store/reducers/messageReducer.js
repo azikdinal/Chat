@@ -6,11 +6,12 @@ const initialState = {
 
 
 export const messageReducer = (state = initialState, action) => {
+    const data = action.payload
     switch (action.type) {
         case 'SET_CHAT_ID':
-            return {...state, chatId: action.payload};
+            return {...state, chatId: data};
         case 'NEW_MESSAGE':
-            return {...state, messages: action.payload, lastMessage: state.messages.pop()};
+            return {...state, messages: data, lastMessage: state.messages.pop()};
         default:
             return state;
     }

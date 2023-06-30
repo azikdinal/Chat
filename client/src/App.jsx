@@ -5,7 +5,7 @@ import Home from './Pages/Home';
 import SignPage from './Pages/SignPage';
 
 const App = () => {
-    const isAuth = useSelector(state => state.user.isAuth);
+    const {isAuth} = useSelector(state => state.user);
     const dispatch = useDispatch();
 
     useEffect(() => {

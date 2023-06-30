@@ -5,9 +5,7 @@ const listenToTableChanges = require("./db/table_change_listener");
 
 const start = async () => {
     try {
-        await sequelize.authenticate()
-        await sequelize.sync()
-        await listenToTableChanges()
+
         await server.listen(PORT, err => {
             if (err) console.log(err)
             console.log('Server is running on Port ', PORT)

@@ -1,41 +1,46 @@
-const {io} = require('../server')
-const pool = require('../db/pool')
+const pool = require('../db/pool');
 
-// Функция для прослушивания изменений в таблице
-const listenToTableChanges = () => {
-    pool.connect((err, client, done) => {
+const listenToChatTableChanges = (userId, io) => {
+    const notificationHandler = async ({channel, payload}) => {
+        const userId_of_chat = parseInt(payload.slice(8).split(';')[0]);
+        if (userId_of_chat === userId) {
+            const chatId = parseInt(payload.split('; chatId: ')[1]);
+            io.emit(channel, {chatId});
+        }
+
+    }
+
+    pool.connect((err, client) => {
         if (err) {
             console.error('Ошибка при подключении к базе данных', err);
             return;
         }
-
-        client.query('LISTEN messages_changes');
-        client.query('LISTEN chats_changes');
-
+        client.query('LISTEN new_chat');
         // Обработка уведомлений
-        client.on('notification', (notification) => {
-            const message = {
-                id: Date.now(),
-                text: "Hello World!"
-            }
-            const res = notification.payload
-            if (res.includes('insert message')) {
-                io.emit('message sent')
-            }
-            if (res.includes('insert chat')) {
-                io.emit('chat opened')
-            }
-            // if(res.includes('update')) {
-            //     console.log('Message updated')
-            // }
-            // if(res.includes('delete')) {
-            //     console.log('Message deleted')
-            // }
+        client.on('notification', notificationHandler);
+    })
+}
+const listenToMessageTableChanges = (chatId, io) => {
+    const notificationHandler = async ({channel, payload}) => {
+        const chatId_of_message = parseInt(payload.split('; chatId: ')[1]);
+        if (chatId_of_message === chatId) {
+            const messageId = parseInt(payload.slice(11).split(';')[0]);
+            console.log(channel)
+            io.emit("new_message", {messageId});
+        }
+    }
+
+    pool.connect((err, client) => {
+        if (err) {
+            console.error('Ошибка при подключении к базе данных', err);
+            return;
+        }
+        client.query('LISTEN new_message');
+        // Обработка уведомлений
+        client.on('notification', notificationHandler);
+    })
+}
 
 
-        });
-    });
-};
 
-module.exports = listenToTableChanges
-
+module.exports = {listenToChatTableChanges, listenToMessageTableChanges};

@@ -1,21 +1,23 @@
 import {useEffect} from "react";
 import {get_messages_by_chatId} from "../store/actions/messageActions.js";
-import socket from "../sockets/socket.js";
+import {socket} from "../sockets/socket.js";
 import {useDispatch} from "react-redux";
 
-export const useMessageDelivered = (chatId) => {
-
+export const useMessageDelivered = () => {
     const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     dispatch(get_chat_messages(chatId)); // Вызывается при первичном рендере
-    // }, []);
-
     useEffect(() => {
-        const handleDelivered = () => dispatch(get_messages_by_chatId(chatId));
-        socket.on("message sent", () => handleDelivered());
+        const handleDelivered = () => dispatch(get_messages_by_chatId());
+
+        socket.on("new_message", () => {
+            console.log("new_message")
+
+            handleDelivered()
+        });
         return () => {
-            socket.off("message sent", () => handleDelivered());
+            socket.off("new_message", () => handleDelivered());
         };
     }, [dispatch]);
+
+    return null
 }

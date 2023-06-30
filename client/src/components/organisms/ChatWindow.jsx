@@ -7,8 +7,8 @@ const ChatWindow = () => {
     let chatId = useSelector(state => state.message.chatId)
 
     return (<div className="chat">
-        <ChatNavbar chatId={chatId}/>
-        <Messages chatId={chatId}/>
+        <ChatNavbar/>
+        <Messages/>
         <Input/>
     </div>)
     // switch (21) {

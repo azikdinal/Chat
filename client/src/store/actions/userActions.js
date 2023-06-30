@@ -1,4 +1,5 @@
 import axios from "axios";
+import {openSocketConnection, socket} from "../../sockets/socket.js";
 
 const URL = process.env.APP_URL + 'api/user/'
 export const sign_up = (email, password) => {
@@ -31,8 +32,10 @@ export const sign_in_by_token = (token) => {
         const url = URL + 'check'
         try {
             const result = await axios.post(url, {token})
-            const id = result.data.decoded.id
-            return dispatch({type: 'SET_ID', payload: id})
+            const userId = result.data.decoded.id
+            openSocketConnection(userId)
+            console.log(`userId: ${userId}`)
+            return dispatch({type: 'SET_ID', payload: userId})
         } catch (e) {
             console.log(e)
         }

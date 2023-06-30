@@ -2,9 +2,9 @@ import axios from "axios";
 
 const URL = process.env.APP_URL
 
-export const get_messages_by_chatId = (chatId) => {
+export const get_messages_by_chatId = () => {
     return async dispatch => {
-        const url = URL + 'api/message/chat/' + chatId
+        const url = URL + 'api/message/' + chatId
         try {
             const json = await axios.get(url)
             const messages = json.data

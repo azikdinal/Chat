@@ -11,8 +11,8 @@ const Message = sequelize.define('message', {
         primaryKey: true,
         autoIncrement: true
     },
-    text:{
-        type:STRING,
+    text: {
+        type: STRING,
     }
 });
 
@@ -22,46 +22,67 @@ const User = sequelize.define('user', {
         primaryKey: true,
         autoIncrement: true
     },
-    email:{
-        type:STRING
+    email: {
+        type: STRING
     },
-    password:{
-        type:STRING
+    password: {
+        type: STRING
     }
 })
 
 const Chat = sequelize.define('chat', {
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+    id: {
+        type: INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    }
+});
+
+const UserChat = sequelize.define('user-chat', {
+    userId: {
+        type: INTEGER,
+        allowNull:false
+
     },
-});
+    chatId: {
+        type: INTEGER,
+        allowNull:false
+    }
+})
 
-User.hasMany(Message, {
-    foreignKey: 'userId',
-});
-User.hasMany(Chat, {
-    foreignKey: 'chatId',
-});
+const ChatMessage = sequelize.define('chat-message',{
+    chatId: {
+        type: INTEGER,
+        allowNull:false
+    },
+    messageId: {
+        type: INTEGER,
+        allowNull:false
 
-Chat.hasMany(Message, {
-    foreignKey: 'chatId',
-});
+    }
+})
 
-Message.belongsTo(User, {
-    foreignKey: 'userId',
-});
+UserChat.belongsTo(User, {
+    foreignKey: 'userId'
+})
 
-Message.belongsTo(Chat, {
-    foreignKey: 'chatId',
-});
-Chat.belongsTo(User, {
-    foreignKey: 'userId',
-});
+UserChat.belongsTo(Chat, {
+    foreignKey: 'chatId'
+})
+
+ChatMessage.belongsTo(Chat, {
+    foreignKey: 'chatId'
+})
+
+ChatMessage.belongsTo(Message, {
+    foreignKey: 'messageId'
+})
+
 
 module.exports = {
     Message,
     User,
-    Chat
+    Chat,
+    UserChat,
+    ChatMessage
 }

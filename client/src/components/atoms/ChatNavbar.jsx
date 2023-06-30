@@ -1,11 +1,5 @@
-import {useEffect} from "react";
-import {get_chat_by_id} from "../../store/actions/chatActions.js";
+const ChatNavbar = () => {
 
-const ChatNavbar = ({chatId}) => {
-
-    useEffect(() => {
-        get_chat_by_id(chatId)
-    }, []);
 
     const email = "Azamat"
 
