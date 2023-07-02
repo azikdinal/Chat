@@ -15,10 +15,10 @@ export const useChatDelivered = () => {
 
     useEffect(() => {
         const handleChats = () => dispatch(get_chats_by_userId(userId))
-        // socket.on('new_chat', () => handleChats())
-        // return () => {
-        //     socket.off('new_chat', () => handleChats())
-        // }
+        socket.on('new_chat', () => handleChats())
+        return () => {
+            socket.off('new_chat', () => handleChats())
+        }
     }, [dispatch]);
 
     return null

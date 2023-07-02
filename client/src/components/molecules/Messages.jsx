@@ -5,7 +5,7 @@ import Message from "../atoms/Message.jsx";
 
 const Messages = () => {
     const containerRef = useRef(null);
-    const messages = useSelector(state => state.message.messages)
+    const {messages} = useSelector(state => state.message)
 
     useMessageDelivered()
 

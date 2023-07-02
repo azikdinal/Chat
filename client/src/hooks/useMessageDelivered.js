@@ -7,15 +7,11 @@ export const useMessageDelivered = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const handleDelivered = () => dispatch(get_messages_by_chatId());
+        const handleDelivered = chatId => dispatch(get_messages_by_chatId(chatId));
 
-        socket.on("new_message", () => {
-            console.log("new_message")
-
-            handleDelivered()
-        });
+        socket.on("new_message", ({chatId}) => handleDelivered(chatId));
         return () => {
-            socket.off("new_message", () => handleDelivered());
+            socket.off("new_message", ({chatId}) => handleDelivered(chatId));
         };
     }, [dispatch]);
 

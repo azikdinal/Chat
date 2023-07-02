@@ -13,7 +13,6 @@ export const openSocketConnection = (userId) => {
         console.log('Connected! Id: ', socket.id);
     });
 
-
     socket.emit('broadcast userId', {userId});
 
     socket.on('Send userId', sendUserIdHandler);

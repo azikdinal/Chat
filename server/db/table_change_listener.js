@@ -25,8 +25,9 @@ const listenToMessageTableChanges = (chatId, io) => {
         const chatId_of_message = parseInt(payload.split('; chatId: ')[1]);
         if (chatId_of_message === chatId) {
             const messageId = parseInt(payload.slice(11).split(';')[0]);
-            console.log(channel)
-            io.emit("new_message", {messageId});
+
+            io.emit("new_message", {chatId});
+            // io.emit("new_message", {messageId});
         }
     }
 

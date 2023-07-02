@@ -16,13 +16,22 @@ io.on('connection', socket => {
     socket.emit("connection")
 
     socket.on("broadcast userId", async ({userId}) => {
-        await sequelize.authenticate()
-        await sequelize.sync()
-        await listenToChatTableChanges(userId, socket)
+        try {
+            await sequelize.authenticate()
+            await sequelize.sync()
+            await listenToChatTableChanges(userId, socket)
+        } catch (e) {
+            console.log(e)
+        }
     })
     socket.on("broadcast chatId", async ({chatId}) => {
-        await listenToMessageTableChanges(chatId, socket)
+        try {
+            await listenToMessageTableChanges(chatId, socket)
+        } catch (e) {
+            console.log(e)
+        }
     })
+
     socket.on('disconnect', (reason) => {
         console.log(reason)
     })
