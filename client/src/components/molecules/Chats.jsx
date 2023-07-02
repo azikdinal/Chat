@@ -4,8 +4,7 @@ import {useChatDelivered} from "../../hooks/useChatDelivered.js";
 
 const Chats = () => {
 
-    const chats = useSelector(state => state.chat.chats)
-
+    const {chats} = useSelector(state => state.chat)
     useChatDelivered()
 
     return (

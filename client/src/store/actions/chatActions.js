@@ -1,12 +1,17 @@
-import axios from "axios";
+import {socket} from "../../sockets/socket.js";
 
-const URL = process.env.APP_URL
-
-export const get_chats_by_userId = (userId) => {
+export const get_chats_by_userId = () => {
     return async dispatch => {
-        const url = URL + 'api/chat/' + userId
-        const res = await axios.get(url)
-        const chats = res.data
-        dispatch({type:"GET_CHATS", payload:chats})
+        socket.on("broadcast chats", chats => {
+            dispatch({type:"GET_CHATS", payload:chats})
+        })
     }
 }
+export const get_chat_by_id = (chatId) => {
+    console.log("RENDER")
+
+    return async dispatch => {
+            dispatch({type:"ADD_CHAT", payload:{id: chatId}})
+    }
+}
+

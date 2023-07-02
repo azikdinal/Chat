@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import {get_messages_by_chatId} from "../store/actions/messageActions.js";
+import {get_message_by_id} from "../store/actions/messageActions.js";
 import {socket} from "../sockets/socket.js";
 import {useDispatch} from "react-redux";
 
@@ -7,11 +7,16 @@ export const useMessageDelivered = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const handleDelivered = chatId => dispatch(get_messages_by_chatId(chatId));
+        const handleDelivered = messageId => {
+            console.log(messageId)
+            // dispatch(get_message_by_id(messageId))
+        };
 
-        socket.on("new_message", ({chatId}) => handleDelivered(chatId));
+        socket.on("new_message", ({messageId}) => {
+            handleDelivered(messageId)
+        });
         return () => {
-            socket.off("new_message", ({chatId}) => handleDelivered(chatId));
+            socket.off("new_message", ({messageId}) => handleDelivered(messageId));
         };
     }, [dispatch]);
 

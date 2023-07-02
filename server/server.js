@@ -1,36 +1,29 @@
 const http = require('http')
 const app = require("./app")
-const socketIo = require('socket.io')
-const sequelize = require("./db/db");
-const {listenToMessageTableChanges, listenToChatTableChanges} = require("./db/table_change_listener");
-
+const broadcast_userId = require("./sockets/broadcast_userId");
+const broadcast_chatId = require("./sockets/broadcast_chatId");
 const server = http.createServer(app)
+const socketIo = require('socket.io')
+const {listenToChatTableChanges, listenToMessageTableChanges} = require("./db/table_change_listener");
 
 const io = socketIo(server, {
     cors: {
         origin: 'http://localhost:3000'
     }
 }) //in case server and client run on different urls
+
+
 io.on('connection', socket => {
     console.log('client connected: ', socket.id)
-    socket.emit("connection")
 
     socket.on("broadcast userId", async ({userId}) => {
-        try {
-            await sequelize.authenticate()
-            await sequelize.sync()
-            await listenToChatTableChanges(userId, socket)
-        } catch (e) {
-            console.log(e)
-        }
+        console.log("userId recieved " + userId)
+        await broadcast_userId(socket, userId) // To get all chats of user
+        await listenToChatTableChanges(userId, io)
     })
-    socket.on("broadcast chatId", async ({chatId}) => {
-        try {
-            await listenToMessageTableChanges(chatId, socket)
-        } catch (e) {
-            console.log(e)
-        }
-    })
+
+    broadcast_chatId(socket) // To get all messages from chat
+
 
     socket.on('disconnect', (reason) => {
         console.log(reason)

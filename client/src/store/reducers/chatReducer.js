@@ -7,7 +7,7 @@ export const chatReducer = (state = initialState, action) => {
         case "GET_CHATS":
             return {...state, chats: action.payload}
         case "ADD_CHAT":
-            return state
+            return {...state, chats: [...state.chats, action.payload]}
         default:
             return state
     }
